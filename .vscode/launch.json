@@ -8,15 +8,14 @@
             "name": "Launch file",
             "type": "go",
             "request": "launch",
+            // "port": 2345,
+            // "host": "127.0.0.1",
             "mode": "debug",
-            "program": "${file}"
-        },
-        {
-            "name": "Launch Package",
-            "type": "go",
-            "request": "launch",
-            "mode": "auto",
-            "program": "${fileDirname}"
+            "remotePath": "",
+            "program": "${workspaceRoot}",
+            "env": {},
+            "args": [],
+            "showLog": false
         }
     ]
 }

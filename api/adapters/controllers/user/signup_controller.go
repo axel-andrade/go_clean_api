@@ -16,19 +16,13 @@ func (ctrl *SignUpController) Run(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "Cannot bind JSON: " + err.Error(),
-		})
-
+		c.JSON(400, gin.H{"error": "Invalid JSON: " + err.Error()})
 		return
 	}
 
 	result, err := ctrl.Interactor.Execute(&user)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "Cannot create category: " + err.Error(),
-		})
-
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 

@@ -5,6 +5,8 @@ import (
 )
 
 type UserRepository interface {
-	Insert(user *entities.User) (*entities.User, error)
-	Find(email string) (*entities.User, error)
+	CreateUser(user *entities.User) (*entities.User, error)
+	UpdateUser(user *entities.User) error
+	FindByEmail(email string) (*entities.User, error)
+	FindByID(email string) (*entities.User, error)
 }

@@ -1,9 +1,9 @@
 package usecases
 
 import (
+	"fmt"
 	"go_clean_api/api/adapters/gateways/repositories"
 	"go_clean_api/api/entities"
-	"log"
 )
 
 type SignUpInteractor struct {
@@ -17,17 +17,34 @@ func BuildSignUpInteractor(r repositories.UserRepository) *SignUpInteractor {
 }
 
 func (bs *SignUpInteractor) Execute(user *entities.User) (*entities.User, error) {
-	err := user.Prepare()
+
+	var err error
+
+	fmt.Println("Building user entity")
+
+	user, err = entities.BuildUser(user.Name, user.Email, user.Password)
 	if err != nil {
-		log.Print(err)
 		return nil, err
 	}
 
-	user, err = bs.repo.Insert(user)
+	fmt.Println("Search already user with email: ", user.Email)
+
+	userExists, err := bs.repo.FindByEmail(user.Email)
 
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 
-	return user, nil
+	if userExists != nil {
+		return nil, fmt.Errorf("user already exists wiht email")
+	}
+
+	result, err := bs.repo.CreateUser(user)
+	if err != nil {
+		return result, err
+	}
+
+	fmt.Println("User created with success")
+
+	return result, nil
 }

@@ -1,10 +1,10 @@
 package entities
 
 import (
+	"errors"
+	v "go_clean_api/api/shared/validators"
 	"log"
 	"time"
-
-	"github.com/asaskevich/govalidator"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -17,10 +17,10 @@ import (
 
 type User struct {
 	Base     `valid:"required"`
-	Name     string `json:"name" bson:"name" valid:"notnull"`
-	Email    string `json:"email" bson:"email" valid:"notnull,email"`
-	Password string `json:"-" bson:"-" valid:"notnull"`
-	Token    string `json:"token" bson:"token" valid:"notnull,uuid"`
+	Name     string `json:"name" bson:"name"`
+	Email    string `json:"email" bson:"email"`
+	Password string `json:"-" bson:"-"`
+	Token    string `json:"token" bson:"token"`
 }
 
 func BuildUser(name string, email string, password string) (*User, error) {
@@ -31,7 +31,6 @@ func BuildUser(name string, email string, password string) (*User, error) {
 	}
 
 	err := user.Prepare()
-
 	if err != nil {
 		return nil, err
 	}
@@ -52,6 +51,12 @@ letra minuscula são funcões privadas.
 */
 
 func (user *User) Prepare() error {
+	err := user.validate()
+	if err != nil {
+		// log.Fatalf("Error during the user validation: %v", err)
+		return err
+	}
+
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -64,22 +69,20 @@ func (user *User) Prepare() error {
 	user.Password = string(password)
 	user.Token = uuid.NewV4().String()
 
-	err = user.validate()
-
-	if err != nil {
-		log.Fatalf("Error during the user validation: %v", err)
-		return err
-	}
-
 	return nil
 }
 
-func (user *User) validate() error {
+func (u *User) validate() error {
+	if v.IsEmpty(u.Name) {
+		return errors.New("name is empty")
+	}
 
-	_, err := govalidator.ValidateStruct(user)
+	if !v.IsValidEmail(u.Email) {
+		return errors.New("email is invalid")
+	}
 
-	if err != nil {
-		return err
+	if v.IsValidPassword(u.Password) {
+		return errors.New("password is invalid")
 	}
 
 	return nil

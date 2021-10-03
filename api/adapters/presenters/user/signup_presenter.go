@@ -12,28 +12,31 @@ type SignUpPresenter struct {
 
 func (p *SignUpPresenter) Show(u *entities.User, err error) output.OutputPort {
 
-	var out output.OutputPort
-
 	if err != nil {
-		return formatErrOutput(out, err)
+		return p.formatErrOutput(err)
 	}
 
-	out.Data = u
-	out.StatusCode = 201
-
-	return out
+	return p.formatSuccessOutput(u)
 }
 
-func formatErrOutput(out output.OutputPort, err error) output.OutputPort {
+func (p *SignUpPresenter) formatSuccessOutput(u *entities.User) output.OutputPort {
+
+	p.Output.Data = u
+	p.Output.StatusCode = 201
+	p.Output.Error = nil
+
+	return p.Output
+}
+func (p *SignUpPresenter) formatErrOutput(err error) output.OutputPort {
 
 	switch err.Error() {
 	case const_errors.EMAIL_ALREADY_EXISTS:
-		out.StatusCode = 409
+		p.Output.StatusCode = 409
 	default:
-		out.StatusCode = 400
+		p.Output.StatusCode = 400
 	}
 
-	out.Error = err.Error()
+	p.Output.Error = err
 
-	return out
+	return p.Output
 }

@@ -2,13 +2,10 @@ package entities
 
 import (
 	"errors"
+	"fmt"
+	"go_clean_api/api/shared/utils"
 	v "go_clean_api/api/shared/validators"
-	"log"
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 /**
@@ -50,24 +47,17 @@ que a função funcionou corretamente. Esta é uma forma de validação.
 letra minuscula são funcões privadas.
 */
 
-func (user *User) Prepare() error {
-	err := user.validate()
+func (u *User) Prepare() error {
+
+	err := u.validate()
 	if err != nil {
-		// log.Fatalf("Error during the user validation: %v", err)
-		return err
+		return fmt.Errorf("error during the user validation: %v", err)
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-
-	if err != nil {
-		log.Fatalf("Error during the password generation: %v", err)
-		return err
-	}
-
-	user.ID = uuid.NewV4().String()
-	user.CreatedAt = time.Now()
-	user.Password = string(password)
-	user.Token = uuid.NewV4().String()
+	u.ID = utils.GenerateUUIDV4()
+	u.CreatedAt = time.Now()
+	u.Password = string(u.Password)
+	u.Token = utils.GenerateUUIDV4()
 
 	return nil
 }
@@ -81,7 +71,7 @@ func (u *User) validate() error {
 		return errors.New("email is invalid")
 	}
 
-	if v.IsValidPassword(u.Password) {
+	if !v.IsValidPassword(u.Password) {
 		return errors.New("password is invalid")
 	}
 

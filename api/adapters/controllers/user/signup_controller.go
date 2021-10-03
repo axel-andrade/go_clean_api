@@ -20,11 +20,11 @@ func (ctrl *SignUpController) Run(c *gin.Context) {
 		return
 	}
 
-	result, err := ctrl.Interactor.Execute(&user)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+	output := ctrl.Interactor.Execute(&user)
+	if output.StatusCode != 200 {
+		c.JSON(int(output.StatusCode), gin.H{"error": output.Error})
 		return
 	}
 
-	c.JSON(201, result)
+	c.JSON(201, output.Data)
 }

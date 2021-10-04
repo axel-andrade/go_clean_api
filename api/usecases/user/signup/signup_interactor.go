@@ -59,7 +59,6 @@ func (bs *SignUpInteractor) Execute(i SignUpInputDTO) common.OutputPort {
 		return bs.Presenter.Show(nil, err)
 	}
 
-	panic("Transaction test")
 	bs.Repo.CommitTransaction()
 
 	fmt.Println("info: user created with success")

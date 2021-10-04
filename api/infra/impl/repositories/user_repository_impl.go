@@ -11,7 +11,7 @@ type UserRepoImpl struct {
 	Db *gorm.DB
 }
 
-func (repo UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
+func (repo *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
 
 	err := repo.Db.Create(user).Error
 
@@ -22,12 +22,12 @@ func (repo UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error)
 	return user, nil
 }
 
-func (repo UserRepoImpl) UpdateUser(user *entities.User) error {
+func (repo *UserRepoImpl) UpdateUser(user *entities.User) error {
 	err := repo.Db.Save(user).Error
 	return err
 }
 
-func (repo UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
+func (repo *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 
 	var user entities.User
 
@@ -40,7 +40,7 @@ func (repo UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 	return &user, nil
 }
 
-func (repo UserRepoImpl) FindByID(email string) (*entities.User, error) {
+func (repo *UserRepoImpl) FindByID(email string) (*entities.User, error) {
 
 	var user entities.User
 	repo.Db.First(&user, "id = ?", email)

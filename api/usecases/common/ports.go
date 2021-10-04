@@ -1,7 +1,7 @@
-package output
+package common
 
 type OutputPort struct {
 	StatusCode int16
 	Data       interface{}
-	Error      error
+	Error      string
 }

@@ -6,7 +6,7 @@ import (
 	"go_clean_api/api/infra/database"
 	handlerImpl "go_clean_api/api/infra/impl/handlers"
 	repoImpl "go_clean_api/api/infra/impl/repositories"
-	interactor "go_clean_api/api/usecases/user"
+	interactor "go_clean_api/api/usecases/user/signup"
 )
 
 func SignUpCompose() *controllers.SignUpController {
@@ -14,7 +14,7 @@ func SignUpCompose() *controllers.SignUpController {
 	repo := repoImpl.UserRepoImpl{Db: db}
 	encrypter := handlerImpl.EncrypterHandlerImpl{}
 	prt := presenters.SignUpPresenter{}
-	bs := interactor.BuildSignUpInteractor(repo, &encrypter, prt)
+	bs := interactor.BuildSignUpInteractor(&repo, &encrypter, &prt)
 	ctrl := controllers.SignUpController{Interactor: *bs}
 	return &ctrl
 }

@@ -2,7 +2,7 @@ package entities
 
 import (
 	"errors"
-	"fmt"
+	ERROR "go_clean_api/api/shared/constants"
 	"go_clean_api/api/shared/utils"
 	v "go_clean_api/api/shared/validators"
 	"time"
@@ -51,7 +51,7 @@ func (u *User) Prepare() error {
 
 	err := u.validate()
 	if err != nil {
-		return fmt.Errorf("error during the user validation: %v", err)
+		return err
 	}
 
 	u.ID = utils.GenerateUUIDV4()
@@ -64,15 +64,15 @@ func (u *User) Prepare() error {
 
 func (u *User) validate() error {
 	if v.IsEmpty(u.Name) {
-		return errors.New("name is empty")
+		return errors.New(ERROR.NAME_IS_EMPTY)
 	}
 
 	if !v.IsValidEmail(u.Email) {
-		return errors.New("email is invalid")
+		return errors.New(ERROR.INVALID_EMAIL)
 	}
 
 	if !v.IsValidPassword(u.Password) {
-		return errors.New("password is invalid")
+		return errors.New(ERROR.INVALID_PASSWORD)
 	}
 
 	return nil

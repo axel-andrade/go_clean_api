@@ -1,27 +1,35 @@
 package controllers
 
 import (
-	"go_clean_api/api/entities"
-	usecases "go_clean_api/api/usecases/user"
+	interactor "go_clean_api/api/usecases/user/signup"
 
 	"github.com/gin-gonic/gin"
 )
 
+// Exemplo request http
+// type HTTPSignUpInput = {
+// 	params: any;
+// 	headers?: any;
+// 	body: SignUpRequestDTO;
+//   };
+
 type SignUpController struct {
-	Interactor usecases.SignUpInteractor
+	Interactor interactor.SignUpInteractor
 }
 
 func (ctrl *SignUpController) Run(c *gin.Context) {
-	var user entities.User
+	var input interactor.SignUpInputDTO
 
-	err := c.ShouldBindJSON(&user)
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid JSON: " + err.Error()})
 		return
 	}
 
-	output := ctrl.Interactor.Execute(&user)
-	if output.StatusCode != 200 {
+	output := ctrl.Interactor.Execute(input)
+
+	// Isso não deve ficar na controller e sim na composição
+	if output.StatusCode != 201 {
 		c.JSON(int(output.StatusCode), gin.H{"error": output.Error})
 		return
 	}

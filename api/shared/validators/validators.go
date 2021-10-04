@@ -8,11 +8,11 @@ func IsValidEmail(e string) bool {
 }
 
 func IsValidPassword(p string) bool {
-	length := len([]rune(p))
+	length := len(p)
 	return length >= 6
 }
 
 func IsEmpty(str string) bool {
-	length := len([]rune(str))
+	length := len(str)
 	return length <= 0
 }

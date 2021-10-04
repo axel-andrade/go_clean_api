@@ -3,17 +3,21 @@ package repositories_impl
 import (
 	"fmt"
 	"go_clean_api/api/entities"
-
-	"gorm.io/gorm"
 )
 
 type UserRepoImpl struct {
-	Db *gorm.DB
+	Base BaseRepositoryImpl
 }
 
-func (repo *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
+func BuildUserRepoImpl() *UserRepoImpl {
+	return &UserRepoImpl{Base: *BuildBaseRepoImpl()}
+}
 
-	err := repo.Db.Create(user).Error
+func (r *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
+
+	q := r.Base.getQueryOrTx()
+
+	err := q.Create(user).Error
 
 	if err != nil {
 		return nil, err
@@ -22,16 +26,16 @@ func (repo *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error
 	return user, nil
 }
 
-func (repo *UserRepoImpl) UpdateUser(user *entities.User) error {
-	err := repo.Db.Save(user).Error
+func (r *UserRepoImpl) UpdateUser(user *entities.User) error {
+	err := r.Base.Db.Save(user).Error
 	return err
 }
 
-func (repo *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
+func (r *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 
 	var user entities.User
 
-	err := repo.Db.Limit(1).Find(&user, "email = ?", email).Error
+	err := r.Base.Db.Limit(1).Find(&user, "email = ?", email).Error
 
 	if err != nil || user.ID == "" {
 		return nil, err
@@ -40,10 +44,10 @@ func (repo *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 	return &user, nil
 }
 
-func (repo *UserRepoImpl) FindByID(email string) (*entities.User, error) {
+func (r *UserRepoImpl) FindByID(email string) (*entities.User, error) {
 
 	var user entities.User
-	repo.Db.First(&user, "id = ?", email)
+	r.Base.Db.First(&user, "id = ?", email)
 
 	if user.Token == "" {
 		return nil, fmt.Errorf("user does not exist")
@@ -51,4 +55,16 @@ func (repo *UserRepoImpl) FindByID(email string) (*entities.User, error) {
 
 	return &user, nil
 
+}
+
+func (r *UserRepoImpl) StartTransaction() error {
+	return r.Base.StartTransaction()
+}
+
+func (r *UserRepoImpl) CancelTransaction() error {
+	return r.Base.CancelTransaction()
+}
+
+func (r *UserRepoImpl) CommitTransaction() error {
+	return r.Base.CommitTransaction()
 }

@@ -51,10 +51,16 @@ func (bs *SignUpInteractor) Execute(i SignUpInputDTO) common.OutputPort {
 		return bs.Presenter.Show(nil, fmt.Errorf(ERRO.EMAIL_ALREADY_EXISTS))
 	}
 
+	bs.Repo.StartTransaction()
+
 	result, err := bs.Repo.CreateUser(u)
 	if err != nil {
+		bs.Repo.CancelTransaction()
 		return bs.Presenter.Show(nil, err)
 	}
+
+	panic("Transaction test")
+	bs.Repo.CommitTransaction()
 
 	fmt.Println("info: user created with success")
 

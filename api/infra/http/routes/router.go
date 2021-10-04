@@ -1,7 +1,7 @@
 package routes
 
 import (
-	composes "go_clean_api/api/infra/composes/user"
+	composes "go_clean_api/api/infra/composes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +9,7 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
 	{
-		main.POST("/signup", composes.SignUpCompose().Run)
+		main.POST("/signup", composes.SignUpCompose)
 		// categories := main.Group("categories")
 		// {
 		// 	categories.POST("/", composes.SignUpCompose())

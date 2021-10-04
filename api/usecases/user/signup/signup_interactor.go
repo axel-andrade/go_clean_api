@@ -25,8 +25,6 @@ func BuildSignUpInteractor(r repositories.UserRepository, e handlers.EncrypterHa
 
 func (bs *SignUpInteractor) Execute(i SignUpInputDTO) common.OutputPort {
 
-	var err error
-
 	fmt.Println("info: building user entity")
 
 	u, err := entities.BuildUser(i.Name, i.Email, i.Password)

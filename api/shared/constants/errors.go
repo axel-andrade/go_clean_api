@@ -1,4 +1,4 @@
-package ERROR
+package constants
 
 const (
 	EMAIL_ALREADY_EXISTS = "email already registered"

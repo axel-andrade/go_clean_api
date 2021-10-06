@@ -1,7 +1,7 @@
 package repositories_impl
 
 import (
-	database "go_clean_api/api/infra/database/mysql"
+	database "go_clean_api/api/infra/database"
 
 	"gorm.io/gorm"
 )

@@ -8,3 +8,10 @@ type TokenDetails struct {
 	AtExpires    int64  `json:"at_expires"`
 	RtExpires    int64  `json:"rt_expires"`
 }
+
+/**
+** Em nossa solução proposta, em vez de apenas criar um token, precisaremos criar dois JWTs:
+** o token de acesso, o token de atualização. A estrutura TokenDetails contém as informações
+** de tokens, seus períodos de expiração e uuids. O período de expiração e os uuids são muito
+** úteis porque serão usados ​​ao salvar metadados de token no redis.
+**/

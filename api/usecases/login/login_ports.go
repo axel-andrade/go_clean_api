@@ -13,7 +13,7 @@ type LoginInputDTO struct {
 type LoginOutputDTO struct {
 	User         entities.User `json:"user"`
 	AccessToken  string        `json:"access_token"`
-	RefreshToken string        `refresh_token`
+	RefreshToken string        `json:"refresh_token"`
 }
 
 type LoginPresenter interface {

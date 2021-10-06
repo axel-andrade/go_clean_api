@@ -21,11 +21,11 @@ func LoginCompose(c *gin.Context) {
 	}
 
 	urepo := repo.BuildUserRepoImpl()
-	tmrepo := repo.TokenManagerRepositoryImpl{}
+	srepo := repo.BuildSessionRepository()
 	encrypter := handler.EncrypterHandlerImpl{}
 	tmhandler := handler.TokenManagerHandlerImpl{}
 	ptr := presenters.LoginPresenter{}
-	interactor := interactor.BuildLoginInteractor(urepo, &tmrepo, &encrypter, &tmhandler, &ptr)
+	interactor := interactor.BuildLoginInteractor(urepo, srepo, &encrypter, &tmhandler, &ptr)
 	ctrl := controllers.LoginController{Interactor: *interactor}
 
 	output := ctrl.Run(input)

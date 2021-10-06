@@ -1,7 +1,7 @@
 package main
 
 import (
-	database "go_clean_api/api/infra/database/mysql"
+	database "go_clean_api/api/infra/database"
 	"go_clean_api/api/infra/http/server"
 	"log"
 
@@ -20,6 +20,8 @@ func init() {
 	}
 
 	database.ConnectDB()
+
+	database.ConnectRedisDB()
 }
 
 func main() {

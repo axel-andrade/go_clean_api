@@ -49,12 +49,6 @@ func (tmi *TokenManagerHandlerImpl) VerifyToken(encodedToken string) (*jwt.Token
 	return token, nil
 }
 
-/**
-A ExtractTokenMetadata função retorna um AccessDetails(que é uma estrutura). Essa estrutura contém
-os metadados ( access_uuide user_id) de que precisaremos para fazer uma consulta no Redis.
-Se houver algum motivo pelo qual não conseguimos obter os metadados deste token, a solicitação
-é interrompida com uma mensagem de erro.
-**/
 func (tmi *TokenManagerHandlerImpl) ExtractTokenMetadata(encoded string) (*entities.AccessDetails, error) {
 
 	token, err := tmi.VerifyToken(encoded)

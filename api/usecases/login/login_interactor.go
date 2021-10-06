@@ -4,32 +4,33 @@ import (
 	"fmt"
 	"go_clean_api/api/adapters/gateways/handlers"
 	"go_clean_api/api/adapters/gateways/repositories"
+	"go_clean_api/api/entities"
 	ERRO "go_clean_api/api/shared/constants"
 	"go_clean_api/api/usecases/common"
 )
 
 type LoginInteractor struct {
-	UserRepo         repositories.UserRepository
-	TokenManagerRepo repositories.TokenManagerRepository
-	Encrypter        handlers.EncrypterHandler
-	TokenManager     handlers.TokenManagerHandler
-	Presenter        LoginPresenter
+	UserRepo     repositories.UserRepository
+	SessionRepo  repositories.SessionRepository
+	Encrypter    handlers.EncrypterHandler
+	TokenManager handlers.TokenManagerHandler
+	Presenter    LoginPresenter
 }
 
 func BuildLoginInteractor(
 	ur repositories.UserRepository,
-	tr repositories.TokenManagerRepository,
+	tr repositories.SessionRepository,
 	e handlers.EncrypterHandler,
 	t handlers.TokenManagerHandler,
 	p LoginPresenter,
 ) *LoginInteractor {
 
 	return &LoginInteractor{
-		UserRepo:         ur,
-		TokenManagerRepo: tr,
-		Encrypter:        e,
-		TokenManager:     t,
-		Presenter:        p,
+		UserRepo:     ur,
+		SessionRepo:  tr,
+		Encrypter:    e,
+		TokenManager: t,
+		Presenter:    p,
 	}
 }
 
@@ -57,14 +58,21 @@ func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
 		return bs.Presenter.Show(nil, err)
 	}
 
-	if err = bs.TokenManagerRepo.CreateAuth(user.ID, td); err != nil {
+	if err = bs.SessionRepo.CreateAuth(user.ID, td); err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
 
+	output := bs.formatOutput(user, td)
+
+	return bs.Presenter.Show(&output, nil)
+}
+
+func (bs *LoginInteractor) formatOutput(user *entities.User, td *entities.TokenDetails) LoginOutputDTO {
 	var out LoginOutputDTO
+
 	out.User = *user
 	out.AccessToken = td.AccessToken
 	out.RefreshToken = td.RefreshToken
 
-	return bs.Presenter.Show(&out, nil)
+	return out
 }

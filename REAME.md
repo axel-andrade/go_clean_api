@@ -23,3 +23,4 @@ c.JSON(http.StatusOK, gin.H{
             },
             "message": message
         })
+

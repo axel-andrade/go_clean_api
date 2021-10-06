@@ -10,6 +10,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
 	{
 		main.POST("/signup", composes.SignUpCompose)
+		main.POST("/login", composes.LoginCompose)
 		// categories := main.Group("categories")
 		// {
 		// 	categories.POST("/", composes.SignUpCompose())

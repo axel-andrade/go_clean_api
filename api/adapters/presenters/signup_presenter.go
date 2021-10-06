@@ -3,7 +3,7 @@ package presenters
 import (
 	ERROR "go_clean_api/api/shared/constants"
 	"go_clean_api/api/usecases/common"
-	interactor "go_clean_api/api/usecases/user/signup"
+	interactor "go_clean_api/api/usecases/signup"
 	"net/http"
 )
 

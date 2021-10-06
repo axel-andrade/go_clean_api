@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go_clean_api/api/infra/database"
+	database "go_clean_api/api/infra/database/mysql"
 	"go_clean_api/api/infra/http/server"
 	"log"
 
@@ -13,14 +13,16 @@ A função init por padrão é a primeira a ser executada pelo go.
 Utilizada para configurar ou fazer um pré carregamento.
 **/
 func init() {
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
+
+	database.ConnectDB()
 }
 
 func main() {
-	database.ConnectDB()
 	server := server.NewServer()
 	server.Run()
 }

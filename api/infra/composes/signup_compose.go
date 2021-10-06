@@ -5,7 +5,7 @@ import (
 	presenters "go_clean_api/api/adapters/presenters"
 	handler "go_clean_api/api/infra/impl/handlers"
 	repo "go_clean_api/api/infra/impl/repositories"
-	interactor "go_clean_api/api/usecases/user/signup"
+	interactor "go_clean_api/api/usecases/signup"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,8 +15,7 @@ func SignUpCompose(c *gin.Context) {
 
 	var input interactor.SignUpInputDTO
 
-	err := c.ShouldBindJSON(&input)
-	if err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid json"})
 		return
 	}

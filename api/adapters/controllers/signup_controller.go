@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"go_clean_api/api/usecases/common"
-	interactor "go_clean_api/api/usecases/user/signup"
+	interactor "go_clean_api/api/usecases/signup"
 )
 
 type SignUpController struct {

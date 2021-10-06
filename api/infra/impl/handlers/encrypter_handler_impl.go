@@ -17,3 +17,9 @@ func (e *EncrypterHandlerImpl) EncryptPassword(p string) (string, error) {
 
 	return string(hash), nil
 }
+
+func (e *EncrypterHandlerImpl) CompareHashAndPassword(hash string, p string) error {
+
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(p))
+	return err
+}

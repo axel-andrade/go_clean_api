@@ -54,9 +54,10 @@ func (u *User) Prepare() error {
 		return err
 	}
 
-	u.ID = utils.GenerateUUIDV4()
+	u.ID = NewID()
 	u.CreatedAt = time.Now()
 	u.Password = string(u.Password)
+	//Esse token deve ser gerado no bussinees
 	u.Token = utils.GenerateUUIDV4()
 
 	return nil

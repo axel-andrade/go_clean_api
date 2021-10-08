@@ -8,13 +8,22 @@ import (
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
-	main := router.Group("api/v1")
-	{
-		main.POST("/signup", composes.SignUpCompose)
-		main.POST("/login", composes.LoginCompose)
-		main.POST("/logout", composes.LogoutCompose)
 
-		users := main.Group("users")
+	main := router.Group("/")
+	{
+		main.GET("/healthcheck", func(c *gin.Context) {
+			c.JSON(200, gin.H{"status": "OK"})
+		})
+	}
+
+	v1 := router.Group("api/v1")
+	{
+
+		v1.POST("/signup", composes.SignUpCompose)
+		v1.POST("/login", composes.LoginCompose)
+		v1.POST("/logout", composes.LogoutCompose)
+
+		users := v1.Group("users")
 		{
 			users.GET("/:id", middlewares.Authorize(), composes.GetUserCompose)
 		}

@@ -1,0 +1,21 @@
+version: '3'
+
+networks:
+    shared-services:
+        external: true
+        
+services:
+  go_clean_api:
+    build: .
+    restart: on-failure
+    environment:
+     - DSN=root:root@tcp(mysql8:3306)/go_clean_basic_api?charset=utf8mb4&parseTime=true
+     - REDIS_DSN=redis:6379
+     - DB_AUTO_MIGRATE=true
+     - ACCESS_SECRET=ACCESS_SECRET
+     - REFRESH_SECRET=REFRESH_SECRET
+     - MINUTES_TO_EXPIRATION_TOKEN=15
+    ports:
+      - 5000:5000
+    networks:
+      - shared-services

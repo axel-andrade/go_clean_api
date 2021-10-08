@@ -44,10 +44,10 @@ func (r *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepoImpl) FindByID(email string) (*entities.User, error) {
+func (r *UserRepoImpl) FindByID(id entities.EntityID) (*entities.User, error) {
 
 	var user entities.User
-	r.Base.Db.First(&user, "id = ?", email)
+	r.Base.Db.First(&user, "id = ?", id)
 
 	if user.Token == "" {
 		return nil, fmt.Errorf("user does not exist")

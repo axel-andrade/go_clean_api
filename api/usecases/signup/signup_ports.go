@@ -5,6 +5,14 @@ import (
 	"go_clean_api/api/usecases/common"
 )
 
+type SignUpGateway interface {
+	CancelTransaction() error
+	CreateUser(user *entities.User) (*entities.User, error)
+	CommitTransaction() error
+	EncryptPassword(p string) (string, error)
+	FindUserByEmail(email string) (*entities.User, error)
+	StartTransaction() error
+}
 type SignUpInputDTO struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`

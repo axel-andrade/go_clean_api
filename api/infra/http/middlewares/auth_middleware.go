@@ -12,7 +12,7 @@ func Authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		tokenManager := handlers_impl.TokenManagerHandlerImpl{}
-		sessionRepo := repositories_impl.BuildSessionRepository()
+		sessionRepo := repositories_impl.BuildSessionRepositoryImpl()
 
 		authHeader := c.GetHeader("Authorization")
 		encodedToken := authHeader[len("Bearer "):]

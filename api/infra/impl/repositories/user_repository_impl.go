@@ -5,17 +5,17 @@ import (
 	"go_clean_api/api/entities"
 )
 
-type UserRepoImpl struct {
-	Base BaseRepositoryImpl
+type UserRepositoryImpl struct {
+	BaseRepositoryImpl
 }
 
-func BuildUserRepoImpl() *UserRepoImpl {
-	return &UserRepoImpl{Base: *BuildBaseRepoImpl()}
+func BuildUserRepositoryImpl() *UserRepositoryImpl {
+	return &UserRepositoryImpl{BaseRepositoryImpl: *BuildBaseRepoImpl()}
 }
 
-func (r *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
+func (r *UserRepositoryImpl) CreateUser(user *entities.User) (*entities.User, error) {
 
-	q := r.Base.getQueryOrTx()
+	q := r.getQueryOrTx()
 
 	err := q.Create(user).Error
 
@@ -26,16 +26,16 @@ func (r *UserRepoImpl) CreateUser(user *entities.User) (*entities.User, error) {
 	return user, nil
 }
 
-func (r *UserRepoImpl) UpdateUser(user *entities.User) error {
-	err := r.Base.Db.Save(user).Error
+func (r *UserRepositoryImpl) UpdateUser(user *entities.User) error {
+	err := r.Db.Save(user).Error
 	return err
 }
 
-func (r *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
+func (r *UserRepositoryImpl) FindUserByEmail(email string) (*entities.User, error) {
 
 	var user entities.User
 
-	err := r.Base.Db.Limit(1).Find(&user, "email = ?", email).Error
+	err := r.Db.Limit(1).Find(&user, "email = ?", email).Error
 
 	if err != nil || user.ID == "" {
 		return nil, err
@@ -44,10 +44,10 @@ func (r *UserRepoImpl) FindByEmail(email string) (*entities.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepoImpl) FindByID(id entities.EntityID) (*entities.User, error) {
+func (r *UserRepositoryImpl) FindUserByID(id entities.EntityID) (*entities.User, error) {
 
 	var user entities.User
-	r.Base.Db.First(&user, "id = ?", id)
+	r.Db.First(&user, "id = ?", id)
 
 	if user.Token == "" {
 		return nil, fmt.Errorf("user does not exist")
@@ -55,16 +55,4 @@ func (r *UserRepoImpl) FindByID(id entities.EntityID) (*entities.User, error) {
 
 	return &user, nil
 
-}
-
-func (r *UserRepoImpl) StartTransaction() error {
-	return r.Base.StartTransaction()
-}
-
-func (r *UserRepoImpl) CancelTransaction() error {
-	return r.Base.CancelTransaction()
-}
-
-func (r *UserRepoImpl) CommitTransaction() error {
-	return r.Base.CommitTransaction()
 }

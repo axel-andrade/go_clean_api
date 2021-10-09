@@ -14,7 +14,7 @@ func LogoutCompose(c *gin.Context) {
 	encodedToken := authHeader[len("Bearer "):]
 
 	tokenManager := handlers_impl.TokenManagerHandlerImpl{}
-	sessionRepo := repositories_impl.BuildSessionRepository()
+	sessionRepo := repositories_impl.BuildSessionRepositoryImpl()
 
 	au, err := tokenManager.ExtractTokenMetadata(encodedToken)
 	if err != nil {

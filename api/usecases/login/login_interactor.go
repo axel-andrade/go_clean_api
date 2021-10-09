@@ -2,42 +2,24 @@ package login
 
 import (
 	"fmt"
-	"go_clean_api/api/adapters/gateways/handlers"
-	"go_clean_api/api/adapters/gateways/repositories"
 	"go_clean_api/api/entities"
 	ERRO "go_clean_api/api/shared/constants"
 	"go_clean_api/api/usecases/common"
 )
 
 type LoginInteractor struct {
-	UserRepo     repositories.UserRepository
-	SessionRepo  repositories.SessionRepository
-	Encrypter    handlers.EncrypterHandler
-	TokenManager handlers.TokenManagerHandler
-	Presenter    LoginPresenter
+	Gateway   LoginGateway
+	Presenter LoginPresenter
 }
 
-func BuildLoginInteractor(
-	ur repositories.UserRepository,
-	tr repositories.SessionRepository,
-	e handlers.EncrypterHandler,
-	t handlers.TokenManagerHandler,
-	p LoginPresenter,
-) *LoginInteractor {
-
-	return &LoginInteractor{
-		UserRepo:     ur,
-		SessionRepo:  tr,
-		Encrypter:    e,
-		TokenManager: t,
-		Presenter:    p,
-	}
+func BuildLoginInteractor(g LoginGateway, p LoginPresenter) *LoginInteractor {
+	return &LoginInteractor{Gateway: g, Presenter: p}
 }
 
 func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
 
 	fmt.Println("info: search already user with email: ", input.Email)
-	user, err := bs.UserRepo.FindByEmail(input.Email)
+	user, err := bs.Gateway.FindUserByEmail(input.Email)
 
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
@@ -48,17 +30,17 @@ func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
 	}
 
 	fmt.Println("info: comparing passwords")
-	if err = bs.Encrypter.CompareHashAndPassword(user.Password, input.Password); err != nil {
+	if err = bs.Gateway.CompareHashAndPassword(user.Password, input.Password); err != nil {
 		return bs.Presenter.Show(nil, fmt.Errorf(ERRO.INCORRECT_PASSWORD))
 	}
 
 	fmt.Println("info: generate token")
-	td, err := bs.TokenManager.GenerateToken(user.ID)
+	td, err := bs.Gateway.GenerateToken(user.ID)
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
 
-	if err = bs.SessionRepo.CreateAuth(user.ID, td); err != nil {
+	if err = bs.Gateway.CreateAuth(user.ID, td); err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
 

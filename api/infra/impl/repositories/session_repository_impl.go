@@ -19,7 +19,7 @@ type SessionRepositoryImpl struct {
 ** FetchAuth()aceita o AccessDetailsda ExtractTokenMetadatafunção e procura-o no redis. Se o
 ** registro não for encontrado, pode significar que o token expirou, portanto, um erro é gerado.
 **/
-func BuildSessionRepository() *SessionRepositoryImpl {
+func BuildSessionRepositoryImpl() *SessionRepositoryImpl {
 	return &SessionRepositoryImpl{Redis: database.GetRedisDB()}
 }
 

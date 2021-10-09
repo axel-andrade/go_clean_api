@@ -3,8 +3,7 @@ package composes
 import (
 	controllers "go_clean_api/api/adapters/controllers"
 	presenters "go_clean_api/api/adapters/presenters"
-	handler "go_clean_api/api/infra/impl/handlers"
-	repo "go_clean_api/api/infra/impl/repositories"
+	"go_clean_api/api/infra/impl/mixins"
 	interactor "go_clean_api/api/usecases/signup"
 	"net/http"
 
@@ -20,10 +19,9 @@ func SignUpCompose(c *gin.Context) {
 		return
 	}
 
-	repo := repo.BuildUserRepoImpl()
-	encrypter := handler.EncrypterHandlerImpl{}
+	gateway := mixins.BuildSignUpMixin()
 	ptr := presenters.SignUpPresenter{}
-	interactor := interactor.BuildSignUpInteractor(repo, &encrypter, &ptr)
+	interactor := interactor.BuildSignUpInteractor(gateway, &ptr)
 	ctrl := controllers.SignUpController{Interactor: *interactor}
 
 	output := ctrl.Run(input)

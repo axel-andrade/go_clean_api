@@ -3,7 +3,6 @@ package entities
 import (
 	"errors"
 	ERROR "go_clean_api/api/shared/constants"
-	"go_clean_api/api/shared/utils"
 	v "go_clean_api/api/shared/validators"
 	"time"
 )
@@ -17,7 +16,6 @@ type User struct {
 	Name     string `json:"name" bson:"name"`
 	Email    string `json:"email" bson:"email"`
 	Password string `json:"-" bson:"-"`
-	Token    string `json:"token" bson:"token"`
 }
 
 func BuildUser(name string, email string, password string) (*User, error) {
@@ -27,8 +25,7 @@ func BuildUser(name string, email string, password string) (*User, error) {
 		Password: password,
 	}
 
-	err := user.Prepare()
-	if err != nil {
+	if err := user.Prepare(); err != nil {
 		return nil, err
 	}
 
@@ -49,16 +46,12 @@ letra minuscula são funcões privadas.
 
 func (u *User) Prepare() error {
 
-	err := u.validate()
-	if err != nil {
+	if err := u.validate(); err != nil {
 		return err
 	}
 
-	u.ID = NewID()
 	u.CreatedAt = time.Now()
 	u.Password = string(u.Password)
-	//Esse token deve ser gerado no bussinees
-	u.Token = utils.GenerateUUIDV4()
 
 	return nil
 }

@@ -1,7 +1,6 @@
 package repositories_impl
 
 import (
-	"fmt"
 	"go_clean_api/api/entities"
 )
 
@@ -44,13 +43,13 @@ func (r *UserRepositoryImpl) FindUserByEmail(email string) (*entities.User, erro
 	return &user, nil
 }
 
-func (r *UserRepositoryImpl) FindUserByID(id entities.EntityID) (*entities.User, error) {
+func (r *UserRepositoryImpl) FindUserByID(id entities.UniqueEntityID) (*entities.User, error) {
 
 	var user entities.User
-	r.Db.First(&user, "id = ?", id)
+	err := r.Db.First(&user, "id = ?", id).Error
 
-	if user.Token == "" {
-		return nil, fmt.Errorf("user does not exist")
+	if err != nil || user.ID == "" {
+		return nil, err
 	}
 
 	return &user, nil

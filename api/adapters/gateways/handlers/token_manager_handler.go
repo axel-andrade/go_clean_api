@@ -5,6 +5,6 @@ import (
 )
 
 type TokenManagerHandler interface {
-	GenerateToken(userid entities.EntityID) (*entities.TokenDetails, error)
+	GenerateToken(userid entities.UniqueEntityID) (*entities.TokenDetails, error)
 	ExtractTokenMetadata(encoded string) (*entities.AccessDetails, error)
 }

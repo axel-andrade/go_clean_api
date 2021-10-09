@@ -9,5 +9,5 @@ type UserRepository interface {
 	CreateUser(user *entities.User) (*entities.User, error)
 	UpdateUser(user *entities.User) error
 	FindUserByEmail(email string) (*entities.User, error)
-	FindUserByID(id entities.EntityID) (*entities.User, error)
+	FindUserByID(id entities.UniqueEntityID) (*entities.User, error)
 }

@@ -16,22 +16,22 @@ func BuildSignUpInteractor(g SignUpGateway, p SignUpPresenter) *SignUpInteractor
 	return &SignUpInteractor{Gateway: g, Presenter: p}
 }
 
-func (bs *SignUpInteractor) Execute(i SignUpInputDTO) common.OutputPort {
+func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
 
 	fmt.Println("info: building user entity")
 
-	u, err := entities.BuildUser(i.Name, i.Email, i.Password)
+	user, err := entities.BuildUser(input.Name, input.Email, input.Password)
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
 
-	if err = bs.encryptPassword(u); err != nil {
+	if err = bs.encryptPassword(user); err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
 
-	fmt.Println("info: search already user with email: ", u.Email)
+	fmt.Println("info: search already user with email: ", user.Email)
 
-	userExists, err := bs.Gateway.FindUserByEmail(u.Email)
+	userExists, err := bs.Gateway.FindUserByEmail(user.Email)
 
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
@@ -43,7 +43,7 @@ func (bs *SignUpInteractor) Execute(i SignUpInputDTO) common.OutputPort {
 
 	bs.Gateway.StartTransaction()
 
-	result, err := bs.Gateway.CreateUser(u)
+	result, err := bs.Gateway.CreateUser(user)
 	if err != nil {
 		bs.Gateway.CancelTransaction()
 		return bs.Presenter.Show(nil, err)

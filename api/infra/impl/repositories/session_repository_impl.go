@@ -23,7 +23,7 @@ func BuildSessionRepositoryImpl() *SessionRepositoryImpl {
 	return &SessionRepositoryImpl{Redis: database.GetRedisDB()}
 }
 
-func (s *SessionRepositoryImpl) GetAuth(auth *entities.AccessDetails) (entities.EntityID, error) {
+func (s *SessionRepositoryImpl) GetAuth(auth *entities.AccessDetails) (entities.UniqueEntityID, error) {
 	userid, err := s.Redis.Get(ctx, auth.AccessUUID).Result()
 	if err != nil {
 		return "", err

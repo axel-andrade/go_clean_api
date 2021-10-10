@@ -25,7 +25,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		users := v1.Group("users")
 		{
-			users.GET("/:id", middlewares.Authorize(), composes.GetUserCompose)
+			users.GET("/", middlewares.Authorize(), composes.FindUsersCompose)
 		}
 	}
 

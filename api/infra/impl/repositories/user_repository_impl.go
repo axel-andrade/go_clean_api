@@ -2,6 +2,7 @@ package repositories_impl
 
 import (
 	"go_clean_api/api/entities"
+	utils "go_clean_api/api/shared/utils"
 )
 
 type UserRepositoryImpl struct {
@@ -53,5 +54,16 @@ func (r *UserRepositoryImpl) FindUserByID(id entities.UniqueEntityID) (*entities
 	}
 
 	return &user, nil
+}
 
+func (r *UserRepositoryImpl) FindUsersPaginate(pagination *entities.PaginationOptions) (*entities.PaginateResult, error) {
+	var users []*entities.User
+	var result entities.PaginateResult
+
+	r.Db.Scopes(utils.Paginate(r.Db, users, pagination, &result)).Find(&users)
+
+	utils.FormatPaginateOutput(pagination, &result)
+	result.Docs = users
+
+	return &result, nil
 }

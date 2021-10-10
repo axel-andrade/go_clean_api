@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"go_clean_api/api/entities"
+	"go_clean_api/api/usecases/common"
 )
 
 type UserRepository interface {
@@ -10,4 +11,5 @@ type UserRepository interface {
 	UpdateUser(user *entities.User) error
 	FindUserByEmail(email string) (*entities.User, error)
 	FindUserByID(id entities.UniqueEntityID) (*entities.User, error)
+	FindUsersPaginate(pagination *entities.PaginationOptions) (*common.PaginateOutput, error)
 }

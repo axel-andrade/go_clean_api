@@ -3,7 +3,7 @@ package login
 import (
 	"fmt"
 	"go_clean_api/api/entities"
-	ERRO "go_clean_api/api/shared/constants"
+	ERROR "go_clean_api/api/shared/constants/errors"
 	"go_clean_api/api/usecases/common"
 )
 
@@ -26,12 +26,12 @@ func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
 	}
 
 	if user == nil {
-		return bs.Presenter.Show(nil, fmt.Errorf(ERRO.USER_NOT_FOUND))
+		return bs.Presenter.Show(nil, fmt.Errorf(ERROR.USER_NOT_FOUND))
 	}
 
 	fmt.Println("info: comparing passwords")
 	if err = bs.Gateway.CompareHashAndPassword(user.Password, input.Password); err != nil {
-		return bs.Presenter.Show(nil, fmt.Errorf(ERRO.INCORRECT_PASSWORD))
+		return bs.Presenter.Show(nil, fmt.Errorf(ERROR.INCORRECT_PASSWORD))
 	}
 
 	fmt.Println("info: generate token")

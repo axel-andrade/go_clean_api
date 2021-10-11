@@ -1,9 +1,10 @@
 package composes
 
 import (
-	handlers_impl "go_clean_api/api/infra/impl/handlers"
-	repositories_impl "go_clean_api/api/infra/impl/repositories"
-	"net/http"
+	"go_clean_api/api/adapters/controllers"
+	"go_clean_api/api/adapters/presenters"
+	"go_clean_api/api/infra/factories"
+	interactor "go_clean_api/api/usecases/logout"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,20 +14,12 @@ func LogoutCompose(c *gin.Context) {
 	authHeader := c.GetHeader("Authorization")
 	encodedToken := authHeader[len("Bearer "):]
 
-	tokenManager := handlers_impl.TokenManagerHandlerImpl{}
-	sessionRepo := repositories_impl.BuildSessionRepositoryImpl()
+	gateway := factories.BuildLogoutGatewayFactory()
+	ptr := presenters.LogoutPresenter{}
+	interactor := interactor.BuildLogoutInteractor(gateway, &ptr)
+	ctrl := controllers.LogoutController{Interactor: *interactor}
 
-	au, err := tokenManager.ExtractTokenMetadata(encodedToken)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	output := ctrl.Run(encodedToken)
 
-	deleted, err := sessionRepo.DeleteAuth(au.AccessUUID)
-	if err != nil || deleted == 0 { //if any goes wrong
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
-
-	c.JSON(http.StatusOK, "Successfully logged out")
+	c.JSON(int(output.StatusCode), output)
 }

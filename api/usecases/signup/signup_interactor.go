@@ -3,7 +3,7 @@ package signup
 import (
 	"fmt"
 	"go_clean_api/api/entities"
-	ERRO "go_clean_api/api/shared/constants"
+	ERROR "go_clean_api/api/shared/constants/errors"
 	"go_clean_api/api/usecases/common"
 )
 
@@ -38,7 +38,7 @@ func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
 	}
 
 	if userExists != nil {
-		return bs.Presenter.Show(nil, fmt.Errorf(ERRO.EMAIL_ALREADY_EXISTS))
+		return bs.Presenter.Show(nil, fmt.Errorf(ERROR.EMAIL_ALREADY_EXISTS))
 	}
 
 	bs.Gateway.StartTransaction()

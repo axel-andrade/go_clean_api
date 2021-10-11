@@ -1,7 +1,7 @@
 package presenters
 
 import (
-	ERROR "go_clean_api/api/shared/constants"
+	ERROR "go_clean_api/api/shared/constants/errors"
 	"go_clean_api/api/usecases/common"
 	interactor "go_clean_api/api/usecases/login"
 	"net/http"

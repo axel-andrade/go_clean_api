@@ -2,7 +2,7 @@ package entities
 
 import (
 	"errors"
-	ERROR "go_clean_api/api/shared/constants"
+	ERROR "go_clean_api/api/shared/constants/errors"
 	v "go_clean_api/api/shared/validators"
 	"time"
 )

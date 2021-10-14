@@ -2,14 +2,14 @@ package controllers
 
 import (
 	"go_clean_api/api/usecases/common"
-	interactor "go_clean_api/api/usecases/logout"
+	interactor "go_clean_api/api/usecases/login"
 )
 
-type LogoutController struct {
-	Interactor interactor.LogoutInteractor
+type LoginController struct {
+	Interactor interactor.LoginInteractor
 }
 
-func (ctrl *LogoutController) Run(encodedToken string) common.OutputPort {
-	output := ctrl.Interactor.Execute(encodedToken)
+func (ctrl *LoginController) Run(input interactor.LoginInputDTO) common.OutputPort {
+	output := ctrl.Interactor.Execute(input)
 	return output
 }

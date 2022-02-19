@@ -2,9 +2,9 @@ package middlewares
 
 import (
 	"fmt"
+	ERROR "go_clean_api/api/constants/errors"
 	handlers_impl "go_clean_api/api/infra/impl/handlers"
 	repositories_impl "go_clean_api/api/infra/impl/repositories"
-	ERROR "go_clean_api/api/shared/constants/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

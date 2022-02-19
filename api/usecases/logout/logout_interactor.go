@@ -2,7 +2,7 @@ package logout
 
 import (
 	"fmt"
-	ERROR "go_clean_api/api/shared/constants/errors"
+	ERROR "go_clean_api/api/constants/errors"
 	"go_clean_api/api/usecases/common"
 )
 

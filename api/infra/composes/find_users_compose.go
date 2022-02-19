@@ -4,7 +4,7 @@ import (
 	"go_clean_api/api/adapters/controllers"
 	"go_clean_api/api/adapters/presenters"
 	"go_clean_api/api/infra/factories"
-	"go_clean_api/api/shared/utils"
+	"go_clean_api/api/infra/utils"
 	interactor "go_clean_api/api/usecases/find_users"
 	"net/http"
 

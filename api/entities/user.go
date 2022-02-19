@@ -1,9 +1,7 @@
 package entities
 
 import (
-	"errors"
-	ERROR "go_clean_api/api/shared/constants/errors"
-	v "go_clean_api/api/shared/validators"
+	vo "go_clean_api/api/entities/value_objects"
 	"time"
 )
 
@@ -13,19 +11,25 @@ import (
 
 type User struct {
 	Base
-	Name     string `json:"name" bson:"name"`
-	Email    string `json:"email" bson:"email"`
-	Password string `json:"-" bson:"-"`
+	Name     vo.Name     `json:"name" bson:"name"`
+	Email    vo.Email    `json:"email" bson:"email"`
+	Password vo.Password `json:"-" bson:"-"`
 }
 
-func BuildUser(name string, email string, password string) (*User, error) {
+func BuildUser(name string, email string, password string, id UniqueEntityID) (*User, error) {
+
 	user := &User{
-		Name:     name,
-		Email:    email,
-		Password: password,
+		Base: Base{
+			ID:        id,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		Name:     vo.Name{Value: name},
+		Email:    vo.Email{Value: email},
+		Password: vo.Password{Value: password},
 	}
 
-	if err := user.Prepare(); err != nil {
+	if err := user.validate(); err != nil {
 		return nil, err
 	}
 
@@ -44,29 +48,17 @@ que a função funcionou corretamente. Esta é uma forma de validação.
 letra minuscula são funcões privadas.
 */
 
-func (u *User) Prepare() error {
-
-	if err := u.validate(); err != nil {
+func (u *User) validate() error {
+	if err := u.Name.Validate(); err != nil {
 		return err
 	}
 
-	u.CreatedAt = time.Now()
-	u.Password = string(u.Password)
-
-	return nil
-}
-
-func (u *User) validate() error {
-	if v.IsEmpty(u.Name) {
-		return errors.New(ERROR.NAME_IS_EMPTY)
+	if err := u.Email.Validate(); err != nil {
+		return err
 	}
 
-	if !v.IsValidEmail(u.Email) {
-		return errors.New(ERROR.INVALID_EMAIL)
-	}
-
-	if !v.IsValidPassword(u.Password) {
-		return errors.New(ERROR.INVALID_PASSWORD)
+	if err := u.Password.Validate(); err != nil {
+		return err
 	}
 
 	return nil

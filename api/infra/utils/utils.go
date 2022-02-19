@@ -6,13 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
-
-func GenerateUUIDV4() string {
-	return uuid.NewV4().String()
-}
 
 func GetPaginationOptionsFromURL(c *gin.Context) entities.PaginationOptions {
 	var options entities.PaginationOptions

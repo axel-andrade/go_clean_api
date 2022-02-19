@@ -2,8 +2,8 @@ package signup
 
 import (
 	"fmt"
+	ERROR "go_clean_api/api/constants/errors"
 	"go_clean_api/api/entities"
-	ERROR "go_clean_api/api/shared/constants/errors"
 	"go_clean_api/api/usecases/common"
 )
 
@@ -20,7 +20,9 @@ func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
 
 	fmt.Println("info: building user entity")
 
-	user, err := entities.BuildUser(input.Name, input.Email, input.Password)
+	nextId := bs.Gateway.NextEntityID()
+
+	user, err := entities.BuildUser(input.Name, input.Email, input.Password, nextId)
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
 	}
@@ -31,7 +33,7 @@ func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
 
 	fmt.Println("info: search already user with email: ", user.Email)
 
-	userExists, err := bs.Gateway.FindUserByEmail(user.Email)
+	userExists, err := bs.Gateway.FindUserByEmail(user.Email.Value)
 
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
@@ -63,12 +65,12 @@ func (bs *SignUpInteractor) encryptPassword(u *entities.User) (err error) {
 
 	fmt.Println("info: encrypting password")
 
-	newp, err := bs.Gateway.EncryptPassword(u.Password)
+	newp, err := bs.Gateway.EncryptPassword(u.Password.Value)
 	if err != nil {
 		return fmt.Errorf("error during password encryption: %v", err)
 	}
 
-	u.Password = string(newp)
+	u.Password.Value = string(newp)
 
 	return nil
 }

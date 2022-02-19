@@ -21,7 +21,7 @@ func NewServer() Server {
 
 func (s *Server) Run() {
 	router := routes.ConfigRoutes(s.server)
+	router.SetTrustedProxies([]string{"127.0.0.1"})
 
-	// log.Print("Server is running on port: ", s.port)
 	log.Fatal(router.Run(":" + s.port))
 }

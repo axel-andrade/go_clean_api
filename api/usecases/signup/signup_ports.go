@@ -12,7 +12,9 @@ type SignUpGateway interface {
 	EncryptPassword(p string) (string, error)
 	FindUserByEmail(email string) (*entities.User, error)
 	StartTransaction() error
+	NextEntityID() string
 }
+
 type SignUpInputDTO struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`

@@ -1,13 +1,16 @@
 package presenters
 
 import (
-	ERROR "go_clean_api/api/shared/constants/errors"
+	common_ptr "go_clean_api/api/adapters/presenters/common"
+	ERROR "go_clean_api/api/constants/errors"
 	"go_clean_api/api/usecases/common"
 	interactor "go_clean_api/api/usecases/signup"
 	"net/http"
 )
 
-type SignUpPresenter struct{}
+type SignUpPresenter struct {
+	UserPtr common_ptr.UserPresenter
+}
 
 func (p *SignUpPresenter) Show(result *interactor.SignUpOutputDTO, err error) common.OutputPort {
 
@@ -22,7 +25,7 @@ func (p *SignUpPresenter) formatSuccessOutput(result *interactor.SignUpOutputDTO
 
 	var out common.OutputPort
 
-	out.Data = result.Data
+	out.Data = p.UserPtr.Format(result.Data)
 	out.StatusCode = http.StatusCreated
 
 	return out

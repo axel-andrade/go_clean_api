@@ -2,8 +2,8 @@ package login
 
 import (
 	"fmt"
+	ERROR "go_clean_api/api/constants/errors"
 	"go_clean_api/api/entities"
-	ERROR "go_clean_api/api/shared/constants/errors"
 	"go_clean_api/api/usecases/common"
 )
 
@@ -30,7 +30,7 @@ func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
 	}
 
 	fmt.Println("info: comparing passwords")
-	if err = bs.Gateway.CompareHashAndPassword(user.Password, input.Password); err != nil {
+	if err = bs.Gateway.CompareHashAndPassword(user.Password.Value, input.Password); err != nil {
 		return bs.Presenter.Show(nil, fmt.Errorf(ERROR.INCORRECT_PASSWORD))
 	}
 

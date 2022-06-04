@@ -37,7 +37,6 @@ func (r *UserRepositoryImpl) UpdateUser(user *entities.User) error {
 }
 
 func (r *UserRepositoryImpl) FindUserByEmail(email string) (*entities.User, error) {
-
 	var user models.User
 
 	err := r.Db.Limit(1).Find(&user, "email = ?", email).Error

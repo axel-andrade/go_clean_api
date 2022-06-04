@@ -14,7 +14,6 @@ import (
 type TokenManagerHandlerImpl struct{}
 
 func (tmi *TokenManagerHandlerImpl) GenerateToken(userid string) (*entities.TokenDetails, error) {
-
 	td := entities.TokenDetails{}
 
 	if err := tmi.configureExpiration(&td); err != nil {
@@ -33,8 +32,7 @@ func (tmi *TokenManagerHandlerImpl) GenerateToken(userid string) (*entities.Toke
 }
 
 func (tmi *TokenManagerHandlerImpl) VerifyToken(encodedToken string) (*jwt.Token, error) {
-
-	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (any, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -50,7 +48,6 @@ func (tmi *TokenManagerHandlerImpl) VerifyToken(encodedToken string) (*jwt.Token
 }
 
 func (tmi *TokenManagerHandlerImpl) ExtractTokenMetadata(encoded string) (*entities.AccessDetails, error) {
-
 	token, err := tmi.VerifyToken(encoded)
 	if err != nil {
 		return nil, err
@@ -97,7 +94,6 @@ func (tmi *TokenManagerHandlerImpl) getSecretKey() string {
 }
 
 func (tmi *TokenManagerHandlerImpl) createAccessToken(td *entities.TokenDetails, userid string) error {
-
 	var err error
 
 	atClaims := jwt.MapClaims{}
@@ -116,8 +112,8 @@ func (tmi *TokenManagerHandlerImpl) createAccessToken(td *entities.TokenDetails,
 }
 
 func (e *TokenManagerHandlerImpl) createRefreshToken(td *entities.TokenDetails, userid string) error {
-
 	var err error
+
 	refreshSecret := os.Getenv("REFRESH_SECRET")
 
 	rtClaims := jwt.MapClaims{}
@@ -135,7 +131,6 @@ func (e *TokenManagerHandlerImpl) createRefreshToken(td *entities.TokenDetails, 
 }
 
 func (e *TokenManagerHandlerImpl) configureExpiration(td *entities.TokenDetails) error {
-
 	expiration, err := strconv.Atoi(os.Getenv("MINUTES_TO_EXPIRATION_TOKEN"))
 	if err != nil {
 		return fmt.Errorf("error converting expiration to int")

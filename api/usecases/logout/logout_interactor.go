@@ -16,7 +16,6 @@ func BuildLogoutInteractor(g LogoutGateway, p LogoutPresenter) *LogoutInteractor
 }
 
 func (bs *LogoutInteractor) Execute(encodedToken string) common.OutputPort {
-
 	au, err := bs.Gateway.ExtractTokenMetadata(encodedToken)
 	if err != nil {
 		return bs.Presenter.Show(fmt.Errorf(ERROR.UNAUTHORIZED))

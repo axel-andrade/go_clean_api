@@ -1,13 +1,16 @@
 package presenters
 
 import (
+	common_ptr "go_clean_api/api/adapters/presenters/common"
 	ERROR "go_clean_api/api/constants/errors"
 	"go_clean_api/api/usecases/common"
 	interactor "go_clean_api/api/usecases/login"
 	"net/http"
 )
 
-type LoginPresenter struct{}
+type LoginPresenter struct {
+	UserPtr common_ptr.UserPresenter
+}
 
 func (p *LoginPresenter) Show(result *interactor.LoginOutputDTO, err error) common.OutputPort {
 
@@ -19,10 +22,13 @@ func (p *LoginPresenter) Show(result *interactor.LoginOutputDTO, err error) comm
 }
 
 func (p *LoginPresenter) formatSuccessOutput(result *interactor.LoginOutputDTO) common.OutputPort {
+	data := make(map[string]any)
+	data["access_token"] = result.AccessToken
+	data["refresh_token"] = result.AccessToken
+	data["user"] = p.UserPtr.Format(result.User)
 
 	var out common.OutputPort
-
-	out.Data = result
+	out.Data = data
 	out.StatusCode = http.StatusOK
 
 	return out

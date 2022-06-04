@@ -19,7 +19,7 @@ func GetPaginationOptionsFromURL(c *gin.Context) entities.PaginationOptions {
 	return options
 }
 
-func Paginate(db *gorm.DB, model interface{}, pagination *entities.PaginationOptions, output *entities.PaginateResult) func(db *gorm.DB) *gorm.DB {
+func Paginate(db *gorm.DB, model any, pagination *entities.PaginationOptions, output *entities.PaginateResult) func(db *gorm.DB) *gorm.DB {
 	var totalDocs int64
 	db.Model(model).Count(&totalDocs)
 	output.TotalDocs = totalDocs

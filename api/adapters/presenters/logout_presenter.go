@@ -9,7 +9,6 @@ import (
 type LogoutPresenter struct{}
 
 func (p *LogoutPresenter) Show(err error) common.OutputPort {
-
 	var out common.OutputPort
 
 	if err == nil {

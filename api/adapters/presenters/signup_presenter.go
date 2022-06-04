@@ -22,10 +22,12 @@ func (p *SignUpPresenter) Show(result *interactor.SignUpOutputDTO, err error) co
 }
 
 func (p *SignUpPresenter) formatSuccessOutput(result *interactor.SignUpOutputDTO) common.OutputPort {
+	data := make(map[string]any)
+	data["user"] = p.UserPtr.Format(result.Data)
 
 	var out common.OutputPort
 
-	out.Data = p.UserPtr.Format(result.Data)
+	out.Data = data
 	out.StatusCode = http.StatusCreated
 
 	return out

@@ -12,9 +12,10 @@ type UserMapper struct {
 
 func (m *UserMapper) ToDomain(model models.User) *entities.User {
 	return &entities.User{
-		Base:  *m.BaseMapper.toDomain(model.Base),
-		Email: vo.Email{Value: model.Email},
-		Name:  vo.Name{Value: model.Name},
+		Base:     *m.BaseMapper.toDomain(model.Base),
+		Email:    vo.Email{Value: model.Email},
+		Name:     vo.Name{Value: model.Name},
+		Password: vo.Password{Value: model.Password},
 	}
 }
 

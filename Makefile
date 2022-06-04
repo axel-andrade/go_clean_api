@@ -6,6 +6,9 @@ build:
 up:
 	docker-compose up -d
 
+watch:
+	docker-compose up -d
+
 down:
 	docker-compose down
 

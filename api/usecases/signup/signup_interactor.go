@@ -17,7 +17,6 @@ func BuildSignUpInteractor(g SignUpGateway, p SignUpPresenter) *SignUpInteractor
 }
 
 func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
-
 	fmt.Println("info: building user entity")
 
 	nextId := bs.Gateway.NextEntityID()
@@ -34,7 +33,6 @@ func (bs *SignUpInteractor) Execute(input SignUpInputDTO) common.OutputPort {
 	fmt.Println("info: search already user with email: ", user.Email)
 
 	userExists, err := bs.Gateway.FindUserByEmail(user.Email.Value)
-
 	if err != nil {
 		return bs.Presenter.Show(nil, err)
 	}

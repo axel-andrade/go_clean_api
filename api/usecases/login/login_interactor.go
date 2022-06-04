@@ -17,7 +17,6 @@ func BuildLoginInteractor(g LoginGateway, p LoginPresenter) *LoginInteractor {
 }
 
 func (bs *LoginInteractor) Execute(input LoginInputDTO) common.OutputPort {
-
 	fmt.Println("info: search already user with email: ", input.Email)
 	user, err := bs.Gateway.FindUserByEmail(input.Email)
 
